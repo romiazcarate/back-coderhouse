@@ -5,7 +5,7 @@ const router = express.Router();
 const productsFilePath = './data/productos.json';
 
 router.use((req, res, next) => {
-    console.log(`📦 [PRODUCTOS] ${req.method} ${req.url}`);
+    console.log(` [PRODUCTOS] ${req.method} ${req.url}`);
     next();
 });
 
