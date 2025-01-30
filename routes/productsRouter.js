@@ -10,14 +10,18 @@ router.use((req, res, next) => {
 });
 
 const getProducts = () => {
+    if (!fs.existsSync(productsFilePath)) {
+        return [];
+    }
     try {
         const data = fs.readFileSync(productsFilePath, 'utf8');
-        return JSON.parse(data);
+        return data ? JSON.parse(data) : [];
     } catch (error) {
         console.error('Error al leer productos:', error);
         return [];
     }
 };
+
 
 const saveProducts = (products) => {
     try {
@@ -81,15 +85,18 @@ router.post('/', (req, res) => {
 router.put('/:pid', (req, res) => {
     let products = getProducts();
     const pid = req.params.pid;
-    const updatedProduct = req.body;
+
+    if (!pid) {
+        return res.status(400).json({ error: 'ID del producto es requerido' });
+    }
 
     const index = products.findIndex(p => p.id.toString() === pid);
     if (index === -1) {
         return res.status(404).json({ error: 'Producto no encontrado' });
     }
 
-    updatedProduct.id = products[index].id;
-    products[index] = { ...products[index], ...updatedProduct };
+    const updatedProduct = req.body;
+    products[index] = { ...products[index], ...updatedProduct, id: pid };
     saveProducts(products);
 
     res.json({ mensaje: 'Producto actualizado', producto: products[index] });
@@ -98,6 +105,10 @@ router.put('/:pid', (req, res) => {
 router.delete('/:pid', (req, res) => {
     let products = getProducts();
     const pid = req.params.pid;
+
+    if (!pid) {
+        return res.status(400).json({ error: 'ID del producto es requerido' });
+    }
 
     const filteredProducts = products.filter(p => p.id.toString() !== pid);
     if (filteredProducts.length === products.length) {

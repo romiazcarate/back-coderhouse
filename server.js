@@ -8,14 +8,11 @@ const PORT = 8080
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`)
-    next()
-})
+
 
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
 
 app.listen(PORT, () => {
-    console.log(` Servidor corriendo en http://localhost:${PORT}`)
+    console.log(` Servidor ok en http://localhost:${PORT}`)
 })
