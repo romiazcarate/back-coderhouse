@@ -1,5 +1,5 @@
 import express from 'express';
-import fs from 'fs';
+import fs from 'fs/promises';
 
 const router = express.Router();
 const productsFilePath = './data/productos.json';
@@ -9,12 +9,10 @@ router.use((req, res, next) => {
     next();
 });
 
-const getProducts = () => {
-    if (!fs.existsSync(productsFilePath)) {
-        return [];
-    }
+const getProducts = async () => {
+   
     try {
-        const data = fs.readFileSync(productsFilePath, 'utf8');
+        const data = await fs.readFile(productsFilePath, 'utf8');
         return data ? JSON.parse(data) : [];
     } catch (error) {
         console.error('Error al leer productos:', error);
@@ -23,16 +21,16 @@ const getProducts = () => {
 };
 
 
-const saveProducts = (products) => {
+const saveProducts = async (products) => {
     try {
-        fs.writeFileSync(productsFilePath, JSON.stringify(products, null, 2), 'utf8');
+        fs.writeFile(productsFilePath, JSON.stringify(products, null, 2), 'utf8');
     } catch (error) {
         console.error('Error al guardar productos:', error);
     }
 };
 
-router.get('/', (req, res) => {
-    const products = getProducts();
+router.get('/', async (req, res) => {
+    const products = await getProducts();
     const limit = req.query.limit ? parseInt(req.query.limit) : products.length;
     
     if (isNaN(limit) || limit < 1) {
@@ -42,8 +40,8 @@ router.get('/', (req, res) => {
     res.json(products.slice(0, limit));
 });
 
-router.get('/:pid', (req, res) => {
-    const products = getProducts();
+router.get('/:pid', async (req, res) => {
+    const products = await getProducts();
     const productId = req.params.pid;
     const product = products.find(p => p.id.toString() === productId);
 
@@ -54,8 +52,8 @@ router.get('/:pid', (req, res) => {
     res.json(product);
 });
 
-router.post('/', (req, res) => {
-    let products = getProducts();
+router.post('/', async (req, res) => {
+    let products = await getProducts();
     const { title, description, code, price, status = true, stock, category, thumbnails = [] } = req.body;
 
     if (!title || !description || !code || price === undefined || stock === undefined || !category) {
@@ -70,20 +68,20 @@ router.post('/', (req, res) => {
         description,
         code,
         price,
-        status,
+        status: true,
         stock,
         category,
         thumbnails
     };
 
     products.push(newProduct);
-    saveProducts(products);
+    await saveProducts(products);
 
     res.status(201).json({ mensaje: 'Producto agregado con éxito', producto: newProduct });
 });
 
-router.put('/:pid', (req, res) => {
-    let products = getProducts();
+router.put('/:pid', async (req, res) => {
+    let products = await getProducts();
     const pid = req.params.pid;
 
     if (!pid) {
@@ -97,13 +95,13 @@ router.put('/:pid', (req, res) => {
 
     const updatedProduct = req.body;
     products[index] = { ...products[index], ...updatedProduct, id: pid };
-    saveProducts(products);
+    await saveProducts(products);
 
     res.json({ mensaje: 'Producto actualizado', producto: products[index] });
 });
 
-router.delete('/:pid', (req, res) => {
-    let products = getProducts();
+router.delete('/:pid', async (req, res) => {
+    let products = await getProducts();
     const pid = req.params.pid;
 
     if (!pid) {
@@ -115,7 +113,7 @@ router.delete('/:pid', (req, res) => {
         return res.status(404).json({ error: 'Producto no encontrado' });
     }
 
-    saveProducts(filteredProducts);
+    await saveProducts(filteredProducts);
     res.json({ mensaje: 'Producto eliminado correctamente' });
 });
 

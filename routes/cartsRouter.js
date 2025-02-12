@@ -1,5 +1,5 @@
 import express from 'express'
-import fs from 'fs'
+import fs from 'fs/promises'
 
 const router = express.Router()
 const cartsFilePath = './data/carts.json'
@@ -9,9 +9,9 @@ router.use((req, res, next) => {
     next()
 })
 
-const getCarts = () => {
+const getCarts = async () => {
     try {
-        const data = fs.readFileSync(cartsFilePath, "utf-8")
+        const data = await fs.readFile(cartsFilePath, "utf-8")
         return JSON.parse(data)
     } catch (error) {
         console.error('Error al leer carritos:', error)
@@ -19,13 +19,20 @@ const getCarts = () => {
     }
 }
 
-router.post('/', (req, res) => {
-    let carts = getCarts()
+const saveCarts = async () => {
+    try {
+        const data = await fs.writeFile(cartsFilePath,  JSON.stringify(carts,null,2), "utf-8")
+    } catch (error){
+        console.error('Error al guardar carritos:', error)
+    }
+}
+
+router.post('/', async (req, res) => {
+    let carts = await getCarts()
     const newCart = { id: carts.length + 1, products: [] }
 
     carts.push(newCart)
-    fs.writeFileSync(cartsFilePath, JSON.stringify(carts, null, 2), "utf-8")
-
+    await saveCarts(carts)
     res.status(201).json({ mensaje: 'Carrito creado', carrito: newCart })
 })
 
