@@ -1,9 +1,12 @@
 import express from 'express'
+import path from 'path'
 import { createServer } from 'http'
 import productsRouter from './routes/productsRouter.js'
 import cartsRouter from './routes/cartsRouter.js'
 import { Server } from 'socket.io'
 import { engine } from 'express-handlebars'
+import viewsRouter from './routes/realTimeProducts.route.js'; 
+
 
 const app = express()
 const server = createServer(app)
@@ -23,6 +26,7 @@ app.use(express.static('public'));
 // Rutas
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
+app.use('/', viewsRouter);
 
 app.get('/', (req,res)=> {
     res.render('realTimeProducts')

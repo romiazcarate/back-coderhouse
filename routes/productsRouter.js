@@ -77,6 +77,8 @@ router.post('/', async (req, res) => {
     products.push(newProduct);
     await saveProducts(products);
 
+    webSocketServer.emit('updateProducts', getProducts())
+
     res.status(201).json({ mensaje: 'Producto agregado con éxito', producto: newProduct });
 });
 
@@ -114,6 +116,9 @@ router.delete('/:pid', async (req, res) => {
     }
 
     await saveProducts(filteredProducts);
+
+    webSocketServer.emit('updateProducts', getProducts())
+
     res.json({ mensaje: 'Producto eliminado correctamente' });
 });
 
