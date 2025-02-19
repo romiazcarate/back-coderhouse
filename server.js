@@ -5,7 +5,7 @@ import productsRouter from './routes/productsRouter.js'
 import cartsRouter from './routes/cartsRouter.js'
 import { Server } from 'socket.io'
 import { engine } from 'express-handlebars'
-import getProducts from './routes/productsRouter.js'
+import { getProducts } from './routes/productsRouter.js'
 
 
 const app = express()
