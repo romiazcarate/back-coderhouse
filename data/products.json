@@ -1,29 +1,38 @@
 [
   {
     "id": 1,
-    "title": "Producto 1",
-    "description": "asdas",
-    "code": "asdas",
-    "price": 1234124,
-    "stock": 123123,
-    "category": "2131"
+    "title": "Leche",
+    "description": "producto almacen",
+    "code": "1",
+    "price": 100,
+    "stock": 2,
+    "category": "producto"
   },
   {
     "id": 2,
-    "title": "Producto 2",
-    "description": "asdas",
-    "code": "asdas",
-    "price": 1234124,
-    "stock": 123123,
-    "category": "2131"
+    "title": "Arroz",
+    "description": "Integral",
+    "code": "2",
+    "price": 100,
+    "stock": 5,
+    "category": "producto"
   },
   {
     "id": 3,
-    "title": "Producto 3",
-    "description": "asdas",
-    "code": "asdas",
-    "price": 1234124,
-    "stock": 123123,
-    "category": "2131"
+    "title": "Huevo",
+    "description": "de campo",
+    "code": "3",
+    "price": 50,
+    "stock": 3,
+    "category": "producto"
+  },
+  {
+    "id": 4,
+    "title": "Mayonesa",
+    "description": "Mayonesa natura",
+    "code": "20",
+    "price": 10000,
+    "stock": 50,
+    "category": "producto"
   }
 ]
