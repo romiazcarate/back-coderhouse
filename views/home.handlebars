@@ -31,3 +31,117 @@
   <button type="submit">Agregar producto</button>
 </form>
 
+<script>
+
+  async function addToCart(productId) {
+    try {
+      const cartId = 1; // Ajusta según lo deseado
+      const response = await fetch(`/api/carts/${cartId}/product/${productId}`, {
+        method: 'POST'
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(`Producto agregado al carrito ID ${cartId}`);
+      } else {
+        alert(data.error || 'Error al agregar producto al carrito');
+      }
+    } catch (error) {
+      console.error('Error al agregar producto al carrito:', error);
+      alert('Ocurrió un error al agregar el producto al carrito.');
+    }
+  }
+    // Función para mostrar el carrito en un popup
+  async function showCart() {
+    const cartId = 1; // Asumimos el carrito con ID 1; ajusta según corresponda
+    try {
+      const response = await fetch(`/api/carts/${cartId}`);
+      const data = await response.json();
+      const cartItems = document.getElementById('cartItems');
+      cartItems.innerHTML = '';
+      if (data.products && data.products.length > 0) {
+        data.products.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = `Producto: ${item.product} - Cantidad: ${item.quantity} `;
+          
+          // Botón para eliminar el producto del carrito
+          const deleteBtn = document.createElement('button');
+          deleteBtn.textContent = 'Eliminar';
+          deleteBtn.onclick = () => deleteFromCart(cartId, item.product);
+          
+          li.appendChild(deleteBtn);
+          cartItems.appendChild(li);
+        });
+      } else {
+        cartItems.innerHTML = '<li>Carrito vacío</li>';
+      }
+      document.getElementById('cartModal').style.display = 'block';
+    } catch (error) {
+      console.error('Error al obtener el carrito', error);
+    }
+  }
+
+    // Función para cerrar el popup del carrito
+  function closeCart() {
+    document.getElementById('cartModal').style.display = 'none';
+  }
+  
+    // Función para eliminar un producto del carrito
+  async function deleteFromCart(cartId, productId) {
+    try {
+      const response = await fetch(`/api/carts/${cartId}/product/${productId}`, { method: 'DELETE' });
+      const data = await response.json();
+      if (response.ok) {
+        alert('Producto eliminado del carrito');
+        showCart(); 
+      } else {
+        alert(data.error || 'Error al eliminar el producto');
+      }
+    } catch (error) {
+      console.error('Error al eliminar producto del carrito:', error);
+    }
+  }
+  /**
+   * Maneja el envío del formulario para crear un producto nuevo.
+   * Envía un POST a /api/products con los datos necesarios.
+   */
+  document.getElementById('product-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = document.getElementById('title').value;
+    const price = parseFloat(document.getElementById('price').value);
+    const description = document.getElementById('description').value;
+    const code = document.getElementById('code').value;
+    const stock = parseInt(document.getElementById('stock').value);
+    const category = document.getElementById('category').value;
+
+    try {
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          code,
+          price,
+          stock,
+          category
+        })
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Producto agregado con éxito');
+        window.location.reload();
+      } else {
+        alert(data.error || 'Error al agregar producto');
+      }
+    } catch (error) {
+      console.error('Error al agregar producto:', error);
+      alert('Ocurrió un error al agregar el producto.');
+    }
+  });
+</script>
+
+
