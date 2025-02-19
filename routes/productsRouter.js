@@ -9,7 +9,7 @@ router.use((req, res, next) => {
     next();
 });
 
-const getProducts = async () => {
+export async function getProducts() {
    
     try {
         const data = await fs.readFile(productsFilePath, 'utf8');
@@ -18,7 +18,7 @@ const getProducts = async () => {
         console.error('Error al leer productos:', error);
         return [];
     }
-};
+}
 
 
 const saveProducts = async (products) => {
