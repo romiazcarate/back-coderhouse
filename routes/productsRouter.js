@@ -2,7 +2,7 @@ import express from 'express';
 import fs from 'fs/promises';
 
 const router = express.Router();
-const productsFilePath = './data/productos.json';
+const productsFilePath = './data/products.json';
 
 router.use((req, res, next) => {
     console.log(` [PRODUCTOS] ${req.method} ${req.url}`);
