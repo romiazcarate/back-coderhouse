@@ -3,10 +3,36 @@
 
 <h2>Agregar producto a la lista</h2>
 <form id="product-form">
-    <input type="text" id="title" placeholder="Titulo" required>
-    <input type="numer" id="price" placeholder="Precio" required>
-    <button type="submit">Agregar</button>
+  <input type="text" id="title" placeholder="Título" required>
+  <input type="number" id="price" placeholder="Precio" required>
+  <button type="submit">Agregar</button>
 </form>
 
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/home.js"></script>
+<script>
+  const socket = io();
+
+  // Escucha del servidor una actualización de productos
+  socket.on('updateProducts', products => {
+    const productList = document.getElementById('product-list');
+    productList.innerHTML = '';
+    products.forEach(p => {
+      const li = document.createElement('li');
+      li.textContent = `${p.title} - $${p.price}`;
+      productList.appendChild(li);
+    });
+  });
+
+  // Envía un producto nuevo al servidor vía Socket.io
+  document.getElementById('product-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const title = document.getElementById('title').value;
+    const price = parseFloat(document.getElementById('price').value);
+
+    socket.emit('newProduct', { title, price });
+
+    // Limpia el formulario
+    document.getElementById('title').value = '';
+    document.getElementById('price').value = '';
+  });
+</script>
