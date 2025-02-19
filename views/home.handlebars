@@ -1,6 +1,33 @@
 <h1> Lista de productos </h1>
 <ul>
     {{#each products}}
-    <li> {{this.title}} - ${{this.price}}  </li>
+    <li> {{this.title}} - ${{this.price}}  
+    <button onclick="addToCart({{this.id}})">Agregar al carrito</button>
+    </li>
     {{/each}}
 </ul>
+
+<button onclick="showCart()">Ver Carrito</button>
+
+<!-- Popup (modal) para mostrar el carrito -->
+<div id="cartModal" style="display:none; position: fixed; top:0; left:0; right:0; bottom:0; background-color: rgba(0,0,0,0.5);">
+  <div style="background: #fff; margin: 10% auto; padding: 20px; width: 300px; position: relative;">
+    <h2>Carrito</h2>
+    <ul id="cartItems"></ul>
+    <button onclick="closeCart()">Cerrar</button>
+  </div>
+</div>
+
+<hr>
+
+<h2>Agregar nuevo producto</h2>
+<form id="product-form">
+  <input type="text" id="title" placeholder="Título" required>
+  <input type="number" id="price" placeholder="Precio" required>
+  <input type="text" id="description" placeholder="Descripción" required>
+  <input type="text" id="code" placeholder="Código" required>
+  <input type="number" id="stock" placeholder="Stock" required>
+  <input type="text" id="category" placeholder="Categoría" required>
+  <button type="submit">Agregar producto</button>
+</form>
+
