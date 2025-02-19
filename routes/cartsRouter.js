@@ -2,7 +2,7 @@ import express from 'express'
 import fs from 'fs/promises'
 
 const router = express.Router()
-const cartsFilePath = './data/carts.json'
+const cartsFilePath = './data/cart.json'
 
 // Middleware para registrar cada solicitud en las rutas de carritos
 router.use((req, res, next) => {
