@@ -29,7 +29,7 @@ app.use(express.static('public'));
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
 
-app.get('/', (req,res)=> {
+app.get('/', async (req,res)=> {
 	let products = await getProducts()
     	console.log(products)
     	res.render('home', { products})
