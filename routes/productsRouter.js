@@ -1,12 +1,14 @@
 import express from 'express';
-import fs from 'fs/promises';
+import { ProductModel } from '../models/product.model.js';
 
-const productsFilePath = './data/products.json';
+
+
+// const productsFilePath = './data/products.json';
 
 /**
  * Función para obtener los productos desde el archivo JSON.
  */
-export async function getProducts() {
+/*export async function getProducts() {
   try {
     const data = await fs.readFile(productsFilePath, 'utf8');
     return data ? JSON.parse(data) : [];
@@ -14,18 +16,18 @@ export async function getProducts() {
     console.error('Error al leer productos:', error);
     return [];
   }
-}
+}*/
 
 /**
  * Función para guardar el arreglo de productos en el archivo JSON.
  */
-async function saveProducts(products) {
+/*async function saveProducts(products) {
   try {
     await fs.writeFile(productsFilePath, JSON.stringify(products, null, 2), 'utf8');
   } catch (error) {
     console.error('Error al guardar productos:', error);
   }
-}
+}*/
 
 
 export default function createProductsRouter(webSocketServer) {
