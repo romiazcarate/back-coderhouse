@@ -39,7 +39,13 @@ export default function createProductsRouter(webSocketServer) {
     next();
   });
 
-  // GET /api/products – devuelve todos los productos.
+  /**  GET /api/products 
+   * Devuelve los productos desde MongoDB con la paginación, filtros y el orden
+   * Los query params son:
+   * - limit(numero de productos por pagina, el default es 10)
+   * page (pagina actual, la default es 1)
+   * sort (asc o desc para ordenar por precio, es opcional )
+   * query */
   router.get('/', async (req, res) => {
     const products = await getProducts();
     res.json(products);
