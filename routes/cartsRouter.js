@@ -47,7 +47,7 @@ router.post('/', async (req, res) => {
 })
 
 /* 
-  2) GET /api/carts/:cid
+  GET /api/carts/:cid
      Obtiene un carrito por su ID
      - Con .populate('products.product') para ver el detalle de cada producto
 */
@@ -66,7 +66,7 @@ router.get('/:cid', async (req, res) => {
 })
 
 /* 
-  3) POST /api/carts/:cid/product/:pid
+  POST /api/carts/:cid/product/:pid
      Agrega un producto al carrito. 
      - Si el carrito no existe, lo crea automáticamente (opcional, según tu lógica).
      - Si el producto ya existe en el carrito, incrementa la cantidad.
@@ -103,7 +103,7 @@ router.post('/:cid/product/:pid', async (req, res) => {
 })
 
 /* 
-  4) DELETE /api/carts/:cid/product/:pid
+  DELETE /api/carts/:cid/product/:pid
      Elimina un producto específico del carrito
 */
 
@@ -137,7 +137,7 @@ router.delete('/:cid/product/:pid', async (req, res) => {
 });
 
 /* 
-  5) PUT /api/carts/:cid/products/:pid
+  PUT /api/carts/:cid/products/:pid
      Actualiza la cantidad de un producto existente en el carrito
 */
 router.put('/:cid/products/:pid', async (req, res) => {
@@ -169,7 +169,7 @@ router.put('/:cid/products/:pid', async (req, res) => {
 });
 
 /* 
-  6) PUT /api/carts/:cid
+  PUT /api/carts/:cid
      Reemplaza todo el array de productos del carrito
      con el array que se recibe en el body
 */
@@ -195,7 +195,7 @@ router.put('/:cid', async (req, res) => {
 })
 
 /* 
-  7) DELETE /api/carts/:cid
+  DELETE /api/carts/:cid
      Elimina TODOS los productos del carrito
 */
 router.delete('/:cid', async (req, res) => {

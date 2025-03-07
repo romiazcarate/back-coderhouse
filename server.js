@@ -1,13 +1,13 @@
-import './connection/mongo.js'
 import express from 'express'
 import path from 'path'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 import { engine } from 'express-handlebars'
-
-// Importamos el router de productos como función factory
-import createProductsRouter, { getProducts } from './routes/productsRouter.js';
+import { ProductModel } from './models/product.model.js'
+import createProductsRouter from './routes/productsRouter.js'
 import cartsRouter from './routes/cartsRouter.js'
+import { connectToMongo } from './connection/mongo.js'
+
 
 const app = express()
 const server = createServer(app)
@@ -30,10 +30,16 @@ app.use('/api/carts', cartsRouter)
 
 // Ruta principal que renderiza la vista "home" y envía los productos existentes
 app.get('/', async (req,res)=> {
-    const products = await getProducts();
-    res.render('home', { title: 'Mi Tienda', products });
+    try {
+        const products = await ProductModel.find().lean();
+        res.render('home', { title: 'Mi Tienda', products })
+      } catch (e) {
+        console.error('Error al obtener productos:', e)
+        res.status(500).send('Error al obtener productos')
+      }
 })
 
+connectToMongo()
 // Websockets
 webSocketServer.on('connection', (socket)=> {
     console.log('Usuario Conectado')

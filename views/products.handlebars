@@ -1,0 +1,34 @@
+<h1>Listado de Productos</h1>
+
+<div class="products-container">
+  {{#each products}}
+    <div class="product-card">
+      <h3>{{this.title}}</h3>
+      <p>{{this.description}}</p>
+      <p>Precio: {{this.price}}</p>
+      <p>Stock: {{this.stock}}</p>
+      <p>Categoría: {{this.category}}</p>
+      <button onclick="addToCart('{{this._id}}')">Agregar al Carrito</button>
+    </div>
+  {{/each}}
+</div>
+
+<hr>
+
+<div class="pagination">
+  {{#if hasPrevPage}}
+    <a href="{{prevLink}}">Anterior</a>
+  {{/if}}
+
+  <span>Página {{page}} de {{totalPages}}</span>
+
+  {{#if hasNextPage}}
+    <a href="{{nextLink}}">Siguiente</a>
+  {{/if}}
+</div>
+
+<script>
+  function addToCart(productId) {
+    alert('Agregando producto ' + productId + ' al carrito...');
+  }
+</script>
