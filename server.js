@@ -6,6 +6,7 @@ import { engine } from 'express-handlebars'
 import { ProductModel } from './models/product.model.js'
 import createProductsRouter from './routes/productsRouter.js'
 import cartsRouter from './routes/cartsRouter.js'
+import { CartModel } from './models/cart.model.js'
 import { connectToMongo } from './connection/mongo.js'
 
 
@@ -31,12 +32,19 @@ app.use('/api/carts', cartsRouter)
 // Ruta principal que renderiza la vista "home" y envía los productos existentes
 app.get('/', async (req,res)=> {
     try {
-        const products = await ProductModel.find().lean();
-        res.render('home', { title: 'Mi Tienda', products })
-      } catch (e) {
-        console.error('Error al obtener productos:', e)
-        res.status(500).send('Error al obtener productos')
-      }
+      // Crear o recuperar un carrito
+      const newCart = await CartModel.create({ products: [] });
+      const cartId = newCart._id.toString();
+  
+      // Obtener productos
+      const products = await ProductModel.find().lean();
+  
+      // Renderizar vista, pasando variables a Handlebars
+      res.render('home', { cartId, products });
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Error interno');
+    }
 })
 
 connectToMongo()

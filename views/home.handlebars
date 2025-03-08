@@ -2,7 +2,7 @@
 <ul>
     {{#each products}}
     <li> {{this.title}} - ${{this.price}}  
-    <button onclick="addToCart({{this.id}})">Agregar al carrito</button>
+    <button onclick="addToCart('{{this._id}}')">Agregar al carrito</button>
     </li>
     {{/each}}
 </ul>
@@ -32,73 +32,75 @@
 </form>
 
 <script>
-
-  async function addToCart(productId) {
+  const cartId = '{{cartId}}'
+  async function addToCart(productId,cartId) {
     try {
-      const cartId = 1; // Ajusta según lo deseado
+      if (!cartId) {
+        alert('No hay un cartId válido. Primero crea un carrito.')
+        return
+      }
       const response = await fetch(`/api/carts/${cartId}/product/${productId}`, {
         method: 'POST'
-      });
-      const data = await response.json();
-
+      })
+      const data = await response.json()
       if (response.ok) {
-        alert(`Producto agregado al carrito ID ${cartId}`);
+        alert(`Producto agregado al carrito: ${cartId}`)
       } else {
-        alert(data.error || 'Error al agregar producto al carrito');
+        alert(data.error || 'Error al agregar producto al carrito')
       }
     } catch (error) {
-      console.error('Error al agregar producto al carrito:', error);
-      alert('Ocurrió un error al agregar el producto al carrito.');
+      console.error('Error:', error)
+      alert('Error al agregar producto al carrito')
     }
   }
     // Función para mostrar el carrito en un popup
   async function showCart() {
-    const cartId = 1; // Asumimos el carrito con ID 1; ajusta según corresponda
+    const cartId = '{{cartId}}' 
     try {
-      const response = await fetch(`/api/carts/${cartId}`);
-      const data = await response.json();
-      const cartItems = document.getElementById('cartItems');
-      cartItems.innerHTML = '';
+      const response = await fetch(`/api/carts/${cartId}`)
+      const data = await response.json()
+      const cartItems = document.getElementById('cartItems')
+      cartItems.innerHTML = ''
       if (data.products && data.products.length > 0) {
         data.products.forEach(item => {
           const li = document.createElement('li');
-          li.textContent = `Producto: ${item.product} - Cantidad: ${item.quantity} `;
+          li.textContent = `Producto: ${item.product} - Cantidad: ${item.quantity} `
           
           // Botón para eliminar el producto del carrito
-          const deleteBtn = document.createElement('button');
-          deleteBtn.textContent = 'Eliminar';
-          deleteBtn.onclick = () => deleteFromCart(cartId, item.product);
+          const deleteBtn = document.createElement('button')
+          deleteBtn.textContent = 'Eliminar'
+          deleteBtn.onclick = () => deleteFromCart(cartId, item.product)
           
-          li.appendChild(deleteBtn);
-          cartItems.appendChild(li);
+          li.appendChild(deleteBtn)
+          cartItems.appendChild(li)
         });
       } else {
-        cartItems.innerHTML = '<li>Carrito vacío</li>';
+        cartItems.innerHTML = '<li>Carrito vacío</li>'
       }
-      document.getElementById('cartModal').style.display = 'block';
+      document.getElementById('cartModal').style.display = 'block'
     } catch (error) {
-      console.error('Error al obtener el carrito', error);
+      console.error('Error al obtener el carrito', error)
     }
   }
 
     // Función para cerrar el popup del carrito
   function closeCart() {
-    document.getElementById('cartModal').style.display = 'none';
+    document.getElementById('cartModal').style.display = 'none'
   }
   
     // Función para eliminar un producto del carrito
   async function deleteFromCart(cartId, productId) {
     try {
-      const response = await fetch(`/api/carts/${cartId}/product/${productId}`, { method: 'DELETE' });
+      const response = await fetch(`/api/carts/${cartId}/product/${productId}`, { method: 'DELETE' })
       const data = await response.json();
       if (response.ok) {
-        alert('Producto eliminado del carrito');
-        showCart(); 
+        alert('Producto eliminado del carrito')
+        showCart()
       } else {
-        alert(data.error || 'Error al eliminar el producto');
+        alert(data.error || 'Error al eliminar el producto')
       }
     } catch (error) {
-      console.error('Error al eliminar producto del carrito:', error);
+      console.error('Error al eliminar producto del carrito:', error)
     }
   }
   /**
@@ -106,13 +108,13 @@
    * Envía un POST a /api/products con los datos necesarios.
    */
   document.getElementById('product-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const title = document.getElementById('title').value;
-    const price = parseFloat(document.getElementById('price').value);
-    const description = document.getElementById('description').value;
-    const code = document.getElementById('code').value;
-    const stock = parseInt(document.getElementById('stock').value);
-    const category = document.getElementById('category').value;
+    e.preventDefault()
+    const title = document.getElementById('title').value
+    const price = parseFloat(document.getElementById('price').value)
+    const description = document.getElementById('description').value
+    const code = document.getElementById('code').value
+    const stock = parseInt(document.getElementById('stock').value)
+    const category = document.getElementById('category').value
 
     try {
       const response = await fetch('/api/products', {
@@ -128,20 +130,20 @@
           stock,
           category
         })
-      });
-      const data = await response.json();
+      })
+      const data = await response.json()
 
       if (response.ok) {
-        alert('Producto agregado con éxito');
-        window.location.reload();
+        alert('Producto agregado con éxito')
+        window.location.reload()
       } else {
-        alert(data.error || 'Error al agregar producto');
+        alert(data.error || 'Error al agregar producto')
       }
     } catch (error) {
-      console.error('Error al agregar producto:', error);
-      alert('Ocurrió un error al agregar el producto.');
+      console.error('Error al agregar producto:', error)
+      alert('Ocurrió un error al agregar el producto.')
     }
-  });
+  })
 </script>
 
 

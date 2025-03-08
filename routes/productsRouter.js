@@ -47,6 +47,7 @@ export default function createProductsRouter(webSocketServer) {
    * sort (asc o desc para ordenar por precio, es opcional )
    * query */
   router.get('/', async (req, res) => {
+    console.log('Entro al GET' )
     try {
       const { limit = 10, page = 1, sort, query } = req.query
       const queryObj = {}
