@@ -80,7 +80,7 @@ router.post('/:cid/product/:pid', async (req, res) => {
     // si no existe el carrito, lo creo
 
     if (!cart){
-      cart = await CartModel.create({ _id: cid, products: []})
+      return res.status(404).json({ error: 'No hay un cartId válido. Primero crea un carrito.' })
     }
 
     //Se verifica si el producto ya se encuentra en el carrito
